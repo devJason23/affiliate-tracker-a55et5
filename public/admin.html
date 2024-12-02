@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Welcome</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <p>Welcome to the Admin Dashboard. You are now successfully logged in!</p>
+
+    <!-- Update Sponsor Section -->
+    <form onsubmit="updateSponsor(); return false;">
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" required><br>
+        <label for="newSponsorId">New Sponsor ID:</label>
+        <input type="text" id="newSponsorId" required><br>
+        <button type="submit">Update Sponsor</button>
+    </form>
+
+    <!-- Mass Payouts Button -->
+    <button id="massPayoutsButton" onclick="processMassPayouts()">Mass Payouts</button>
+
+    <script>
+        async function updateSponsor() {
+            const token = localStorage.getItem('token');
+            const userId = document.getElementById('userId').value;
+            const newSponsorId = document.getElementById('newSponsorId').value;
+
+            const response = await fetch('/admin/update-sponsor', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ userId, newSponsorId }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Sponsor updated successfully');
+            } else {
+                alert(data.error);
+            }
+        }
+
+        async function processMassPayouts() {
+            const response = await fetch('/affiliate/mass-payouts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                alert('Mass payouts processed successfully');
+            } else {
+                alert('Error processing mass payouts');
+            }
+        }
+    </script>
+</body>
+</html>
