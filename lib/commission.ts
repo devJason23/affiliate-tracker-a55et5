@@ -179,4 +179,3 @@ async function updateAffiliateStatus(
 }
 
 // ... (previous helper functions remain the same)
-

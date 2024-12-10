@@ -1,15 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '../../hooks/useAuth'  // Update the import path
 
 export default function ReferralLinkBox() {
   const [copied, setCopied] = useState(false)
   const { user } = useAuth()
   
-  const referralLink = `${process.env.NEXT_PUBLIC_SITE_URL}/join/${user?.referralCode}`
+  const referralLink = user ? `${process.env.NEXT_PUBLIC_SITE_URL}/join/${user.referralCode}` : ''
 
   const copyToClipboard = async () => {
+    if (!referralLink) return
     try {
       await navigator.clipboard.writeText(referralLink)
       setCopied(true)
@@ -19,6 +20,8 @@ export default function ReferralLinkBox() {
     }
   }
 
+  if (!user) return null  // Don't render anything if user is not authenticated
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-[#00A3FF]">
       <div className="flex items-center justify-between mb-4">
@@ -26,7 +29,7 @@ export default function ReferralLinkBox() {
         <img 
           src="https://i.ibb.co/CtDkWFF/A55-ET5-LOGO-Donkey.webp"
           alt="A55ET5 Mascot" 
-          className="h-12 w-12 object-contain"
+          className="h-12 w-12"
         />
       </div>
       
@@ -63,4 +66,38 @@ export default function ReferralLinkBox() {
   )
 }
 
-// ... rest of the component remains the same
+function CopyIcon({ className }: { className?: string }) {
+  return (
+    <svg 
+      className={className} 
+      fill="none" 
+      viewBox="0 0 24 24" 
+      stroke="currentColor"
+    >
+      <path 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        strokeWidth={2} 
+        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" 
+      />
+    </svg>
+  )
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg 
+      className={className} 
+      fill="none" 
+      viewBox="0 0 24 24" 
+      stroke="currentColor"
+    >
+      <path 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        strokeWidth={2} 
+        d="M5 13l4 4L19 7" 
+      />
+    </svg>
+  )
+}
